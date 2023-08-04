@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/listPresensiFragment">
+
+    <fragment
+        android:id="@+id/listPresensiFragment"
+        android:name="com.example.presensibagas.ListPresensiFragment"
+        android:label="fragment_list_presensi"
+        tools:layout="@layout/fragment_list_presensi" />
+    <fragment
+        android:id="@+id/addPresensiManualFragment"
+        android:name="com.example.presensibagas.AddPresensiManualFragment"
+        android:label="fragment_add_presensi_manual"
+        tools:layout="@layout/fragment_add_presensi_manual" />
+    <fragment
+        android:id="@+id/addPresensiKeluarMaunalFragment"
+        android:name="com.example.presensibagas.AddPresensiKeluarMaunalFragment"
+        android:label="fragment_add_presensi_keluar_maunal"
+        tools:layout="@layout/fragment_add_presensi_keluar_maunal" />
+</navigation>
