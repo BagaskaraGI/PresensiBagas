@@ -9,15 +9,33 @@
         android:id="@+id/listPresensiFragment"
         android:name="com.example.presensibagas.ListPresensiFragment"
         android:label="fragment_list_presensi"
-        tools:layout="@layout/fragment_list_presensi" />
+        tools:layout="@layout/fragment_list_presensi" >
+        <action
+            android:id="@+id/action_listPresensiFragment_to_addPresensiManualFragment"
+            app:destination="@id/addPresensiManualFragment" />
+        <action
+            android:id="@+id/action_listPresensiFragment_to_addPresensiKeluarManualFragment"
+            app:destination="@id/addPresensiKeluarManualFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addPresensiManualFragment"
         android:name="com.example.presensibagas.AddPresensiManualFragment"
         android:label="fragment_add_presensi_manual"
-        tools:layout="@layout/fragment_add_presensi_manual" />
+        tools:layout="@layout/fragment_add_presensi_manual" >
+        <action
+            android:id="@+id/action_addPresensiManualFragment_to_listPresensiFragment"
+            app:destination="@id/listPresensiFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/addPresensiKeluarMaunalFragment"
-        android:name="com.example.presensibagas.AddPresensiKeluarMaunalFragment"
+        android:id="@+id/addPresensiKeluarManualFragment"
+        android:name="com.example.presensibagas.AddPresensiKeluarManualFragment"
         android:label="fragment_add_presensi_keluar_maunal"
-        tools:layout="@layout/fragment_add_presensi_keluar_maunal" />
+        tools:layout="@layout/fragment_add_presensi_keluar_manual" >
+        <action
+            android:id="@+id/action_addPresensiKeluarManualFragment_to_listPresensiFragment"
+            app:destination="@id/listPresensiFragment" />
+        <argument
+            android:name="currentPresensi"
+            app:argType="com.example.presensibagas.Data.Presensi" />
+    </fragment>
 </navigation>

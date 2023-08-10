@@ -5,14 +5,14 @@
     android:id="@+id/frameLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddPresensiKeluarMaunalFragment">
+    tools:context=".AddPresensiKeluarManualFragment">
 
     <Button
-        android:id="@+id/buttonSimpan"
+        android:id="@+id/btnSimpanAbsenKeluar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Simpan Absen Masuk"
+        android:text="Simpan Absen Keluar"
         app:layout_constraintEnd_toEndOf="@+id/layout"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/layout"
