@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.presensibagas.Data.Presensi
 import com.example.presensibagas.Data.PresensiViewModel
 import com.example.presensibagas.databinding.FragmentAddPresensiManualBinding
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 
 /**
@@ -32,6 +34,27 @@ class AddPresensiManualFragment : Fragment() {
         _binding = FragmentAddPresensiManualBinding.inflate(layoutInflater,container,false)
         mPresensiViewModel = ViewModelProvider(this).get(PresensiViewModel::class.java)
 
+        val time = Calendar.getInstance().time
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+        val timeFormatter = SimpleDateFormat("HH:mm")
+        val currentDate = dateFormatter.format(time)
+        val currentTime = timeFormatter.format(time)
+
+//        binding.inputTanggalMasuk.setText(currentDate)
+//        binding.inputTanggalMasuk.isEnabled = false
+//        binding.inputJamMasuk.setText(currentTime)
+//        binding.inputJamMasuk.isEnabled = false
+
+        binding.inputTanggalMasuk.apply {
+            setText(currentDate)
+            isEnabled = false
+        }
+
+        binding.inputJamMasuk.apply {
+            setText(currentTime)
+            isEnabled = false
+        }
+
         binding.btnSimpanAbsenMasuk.setOnClickListener {
             insertDataToDatabase()
             this.findNavController().navigate(R.id.action_addPresensiManualFragment_to_listPresensiFragment)
@@ -42,7 +65,7 @@ class AddPresensiManualFragment : Fragment() {
     private fun insertDataToDatabase(){
         val tanggalMasuk = binding.inputTanggalMasuk.text.toString()
         val jamMasuk = binding.inputJamMasuk.text.toString()
-        val lokasiMasuk = binding.inputJamMasuk.text.toString()
+        val lokasiMasuk = binding.inputLokasiMasuk.text.toString()
         val tanggalKeluar = "-"
         val jamKeluar = "-"
         val lokasiKeluar = "-"
