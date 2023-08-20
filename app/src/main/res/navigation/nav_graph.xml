@@ -38,4 +38,9 @@
             android:name="currentPresensi"
             app:argType="com.example.presensibagas.Data.Presensi" />
     </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.presensibagas.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
 </navigation>
