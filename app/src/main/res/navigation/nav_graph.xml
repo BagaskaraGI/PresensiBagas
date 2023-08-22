@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_listPresensiFragment_to_addPresensiKeluarManualFragment"
             app:destination="@id/addPresensiKeluarManualFragment" />
+        <action
+            android:id="@+id/action_listPresensiFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/addPresensiManualFragment"

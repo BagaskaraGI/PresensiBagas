@@ -49,7 +49,8 @@ class ListPresensiFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnAbsenMasuk.setOnClickListener {
-            this.findNavController().navigate(R.id.action_listPresensiFragment_to_addPresensiManualFragment)
+//            this.findNavController().navigate(R.id.action_listPresensiFragment_to_addPresensiManualFragment)
+            this.findNavController().navigate(R.id.action_listPresensiFragment_to_mapFragment)
         }
     }
 
