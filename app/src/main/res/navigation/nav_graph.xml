@@ -28,10 +28,6 @@
         <action
             android:id="@+id/action_addPresensiManualFragment_to_listPresensiFragment"
             app:destination="@id/listPresensiFragment" />
-        <argument
-            android:name="dataAbsen"
-            app:argType="string[]"
-            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/addPresensiKeluarManualFragment"
@@ -44,21 +40,19 @@
         <argument
             android:name="currentPresensi"
             app:argType="com.example.presensibagas.Data.Presensi" />
-        <argument
-            android:name="dataAbsen"
-            app:argType="string[]"
-            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.example.presensibagas.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" >
+        <argument
+            android:name="currentPresensi"
+            app:argType="com.example.presensibagas.Data.Presensi"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
-            android:id="@+id/action_mapFragment_to_addPresensiManualFragment"
-            app:destination="@id/addPresensiManualFragment" />
-        <action
-            android:id="@+id/action_mapFragment_to_addPresensiKeluarManualFragment"
-            app:destination="@id/addPresensiKeluarManualFragment" />
+            android:id="@+id/action_mapFragment_to_listPresensiFragment"
+            app:destination="@id/listPresensiFragment" />
     </fragment>
 </navigation>

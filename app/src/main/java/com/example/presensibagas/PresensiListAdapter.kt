@@ -40,7 +40,8 @@ class PresensiListAdapter : RecyclerView.Adapter<PresensiListAdapter.MyViewHolde
         }
 
         holder.itemView.findViewById<Button>(R.id.btn_absen_keluar).setOnClickListener {
-            val action = ListPresensiFragmentDirections.actionListPresensiFragmentToAddPresensiKeluarManualFragment(currentItem)
+//            val action = ListPresensiFragmentDirections.actionListPresensiFragmentToAddPresensiKeluarManualFragment(currentItem)
+            val action = ListPresensiFragmentDirections.actionListPresensiFragmentToMapFragment(currentItem)
             holder.itemView.findNavController().navigate(action)
         }
     }

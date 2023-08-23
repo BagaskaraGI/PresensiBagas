@@ -17,6 +17,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.example.presensibagas.Data.Presensi
+import com.example.presensibagas.Data.PresensiViewModel
 import com.example.presensibagas.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -35,6 +40,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import kotlinx.coroutines.MainScope
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 
@@ -45,59 +52,63 @@ import java.util.Locale
  */
 class MapFragment : Fragment(), OnMapReadyCallback {
     // TODO: Rename and change types of parameters
-    lateinit var mMap  : GoogleMap //VAR MAP
+    lateinit var mMap: GoogleMap //VAR MAP
     lateinit var mLocationRequest: LocationRequest //VAR MINTA LOKASI
     private lateinit var mMapFragment: SupportMapFragment
-    private lateinit var myPosition : LatLng
+    private lateinit var myPosition: LatLng
 
     internal var mFusedLocationClient: FusedLocationProviderClient? = null  // IDK
 
-    private var status =""
-    private var address =""
+    private var status = ""
+    private var address = ""
+
     var mLastLocation: Location? = null // VAR LOKASI TERAKHIR
     var mCurrentLocationMarker: Marker? = null  // MARKER LOKASI SAAT INI
-    var cevestLocationMarker : Marker? = null   // MARKER LOKASI KANTOR
-    var garisJarak : Polyline? = null           // GARIS
-    var checkIn : String = ""
+    var cevestLocationMarker: Marker? = null   // MARKER LOKASI KANTOR
+    var garisJarak: Polyline? = null           // GARIS
+    var checkIn: String = ""
+
+
+    private val args by navArgs<MapFragmentArgs>()
 
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
+    private lateinit var mPresensiViewModel: PresensiViewModel
 
 
-
-    internal var mLocationCallback: LocationCallback = object : LocationCallback(){
-        override fun onLocationResult(locationResult: LocationResult){
+    internal var mLocationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
 //            binding = ActivityCheckPresensiBinding.inflate(layoutInflater)
             val locationList = locationResult?.locations
-            Log.d("CEKUP","INI INTERNAL")
-            if(locationList!!.isNotEmpty()){
+            Log.d("CEKUP", "INI INTERNAL")
+            if (locationList!!.isNotEmpty()) {
                 val location = locationList.last()
-                Log.i("cekcek",location.toString())
+                Log.i("cekcek", location.toString())
                 mLastLocation = location
-                if(mCurrentLocationMarker != null){
+                if (mCurrentLocationMarker != null) {
                     mCurrentLocationMarker?.remove()
                 }
 
-                if(cevestLocationMarker !=null){
+                if (cevestLocationMarker != null) {
                     cevestLocationMarker?.remove()
                 }
 
-                if(garisJarak != null){
+                if (garisJarak != null) {
                     garisJarak?.remove()
                 }
                 // ============================= OUR LOCATION START
-                myPosition = LatLng(location.latitude,location.longitude)
+                myPosition = LatLng(location.latitude, location.longitude)
                 val markerOptions = MarkerOptions()
                 markerOptions.position(myPosition)
 
-                markerOptions.title("Posisi sekarang "+location.latitude+","+location.longitude.toString())
+                markerOptions.title("Posisi sekarang " + location.latitude + "," + location.longitude.toString())
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
                 mCurrentLocationMarker = mMap.addMarker(markerOptions)
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition,15.0F))
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15.0F))
                 // ============================= OUR LOCATION END
                 // ============================= KANTOR LOCATION START
 //                val cevestLocation = LatLng(-6.2347677,106.987864)
-                val cevestLocation = LatLng(-6.235627,106.989408)
+                val cevestLocation = LatLng(-6.235627, 106.989408)
 
 
                 cevestLocationMarker = mMap.addMarker(
@@ -120,17 +131,22 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 // =========================== GARIS JARAK START
                 val distance = FloatArray(2)
                 Location.distanceBetween(
-                    cevestLocation.latitude,cevestLocation.longitude,location.latitude,location.longitude,distance
+                    cevestLocation.latitude,
+                    cevestLocation.longitude,
+                    location.latitude,
+                    location.longitude,
+                    distance
                 )
 
-                if (distance[0] > circleOptions.radius){
+                if (distance[0] > circleOptions.radius) {
                     status = "WFH"
-                }else{
+                } else {
                     status = "WFO"
                 }
 
                 garisJarak = mMap.addPolyline(
-                    PolylineOptions().add(cevestLocation,
+                    PolylineOptions().add(
+                        cevestLocation,
                         LatLng(location.latitude, location.longitude)
                     )
                         .width(5.0F)
@@ -144,7 +160,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
                 geocoder = Geocoder(requireContext(), Locale.getDefault())
 
-                addresses = geocoder.getFromLocation(latitude,longitude,1)
+                addresses = geocoder.getFromLocation(latitude, longitude, 1)
 
                 address =
                     addresses!![0].getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
@@ -173,21 +189,32 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        Log.d("CEKUP","INI ONCREATEVIEW")
+        Log.d("CEKUP", "INI ONCREATEVIEW")
         _binding = FragmentMapBinding.inflate(layoutInflater, container, false)
+        mPresensiViewModel = ViewModelProvider(this).get(PresensiViewModel::class.java)
 
-        var buttonCheck = binding.buttCheck
-        var tvLokasi = binding.tvLokasi
-        var tvStatus = binding.tvStatus
+
+        val buttonCheck = binding.buttCheck
+        val tvLokasi = binding.tvLokasi
+        val tvStatus = binding.tvStatus
+        val buttonNext = binding.btnNext
+        buttonNext.isEnabled = false
+
+
 
         buttonCheck.setOnClickListener() {
             val pesan = "Status Bekerja anda saat ini : $status"
             tvStatus.text = pesan
             tvLokasi.text = Html.fromHtml(checkIn)
+            buttonNext.isEnabled = true
             buttonCheck.text = "Sudah Absen"
             buttonCheck.isEnabled = false
         }
 
+        buttonNext.setOnClickListener {
+            insertDataToDatabase()
+            this.findNavController().navigate(R.id.action_mapFragment_to_listPresensiFragment)
+        }
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         mMapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -198,11 +225,56 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     }
 
+    private fun insertDataToDatabase() {
+        val time = Calendar.getInstance().time
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+        val timeFormatter = SimpleDateFormat("HH:mm")
+        val currentDate = dateFormatter.format(time)
+        val currentTime = timeFormatter.format(time)
+
+
+        if (args.currentPresensi == null) {
+            val tanggalMasuk = currentDate
+            val jamMasuk = currentTime
+            val lokasiMasuk = address
+            val tanggalKeluar = "-"
+            val jamKeluar = "-"
+            val lokasiKeluar = "-"
+            val statusWfh = status
+            val presensi = Presensi(
+                0,
+                tanggalMasuk,
+                jamMasuk,
+                lokasiMasuk,
+                tanggalKeluar,
+                jamKeluar,
+                lokasiKeluar,
+                statusWfh
+            )
+            mPresensiViewModel.insertPresensiMasuk(presensi)
+
+        }else{
+            val id = args.currentPresensi!!.id
+            val tanggalMasuk = args.currentPresensi!!.tanggalMasuk
+            val jamMasuk = args.currentPresensi!!.jamMasuk
+            val lokasiMasuk = args.currentPresensi!!.lokasiMasuk
+            val tanggalKeluar = currentDate
+            val jamKeluar = currentTime
+            val lokasiKeluar = address
+            val statusWfh = status
+            val presensi = Presensi(id, tanggalMasuk, jamMasuk, lokasiMasuk, tanggalKeluar, jamKeluar, lokasiKeluar, statusWfh)
+            mPresensiViewModel.insertPresensiKeluar(presensi)
+        }
+
+
+
+
+    }
 
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.mapType= GoogleMap.MAP_TYPE_HYBRID
+        mMap.mapType = GoogleMap.MAP_TYPE_HYBRID
         mLocationRequest = LocationRequest()
         mLocationRequest.interval = 50000
         mLocationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
@@ -221,9 +293,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return Toast.makeText(requireContext(),"Izinkan Akses Location", Toast.LENGTH_LONG).show()
+            return Toast.makeText(requireContext(), "Izinkan Akses Location", Toast.LENGTH_LONG)
+                .show()
         }
-        mFusedLocationClient?.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper())
+        mFusedLocationClient?.requestLocationUpdates(
+            mLocationRequest,
+            mLocationCallback,
+            Looper.myLooper()
+        )
         googleMap.isMyLocationEnabled = true
 
     }
