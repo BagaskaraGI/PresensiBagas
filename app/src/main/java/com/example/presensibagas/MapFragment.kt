@@ -53,6 +53,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     internal var mFusedLocationClient: FusedLocationProviderClient? = null  // IDK
 
     private var status =""
+    private var address =""
     var mLastLocation: Location? = null // VAR LOKASI TERAKHIR
     var mCurrentLocationMarker: Marker? = null  // MARKER LOKASI SAAT INI
     var cevestLocationMarker : Marker? = null   // MARKER LOKASI KANTOR
@@ -95,7 +96,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition,15.0F))
                 // ============================= OUR LOCATION END
                 // ============================= KANTOR LOCATION START
-                val cevestLocation = LatLng(-6.2347677,106.987864)
+//                val cevestLocation = LatLng(-6.2347677,106.987864)
+                val cevestLocation = LatLng(-6.235627,106.989408)
+
 
                 cevestLocationMarker = mMap.addMarker(
                     MarkerOptions()
@@ -110,7 +113,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 val circleOptions = CircleOptions()
                 circleOptions.center(cevestLocation)
 
-                circleOptions.radius(1000.0)
+                circleOptions.radius(250.0)
                 circleOptions.strokeColor(Color.RED)
                 mMap.addCircle(circleOptions)
                 // =========================== KANTOR LOCATION END
@@ -143,7 +146,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
                 addresses = geocoder.getFromLocation(latitude,longitude,1)
 
-                val address =
+                address =
                     addresses!![0].getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
 //                val citya = addresses[0].
 //                val city = addresses[0].locality
