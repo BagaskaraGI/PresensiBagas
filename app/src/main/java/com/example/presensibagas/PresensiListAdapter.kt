@@ -34,6 +34,7 @@ class PresensiListAdapter : RecyclerView.Adapter<PresensiListAdapter.MyViewHolde
         holder.itemView.findViewById<TextView>(R.id.status_wfh_tv).text = currentItem.statusWFH
 
         val buttonAbsenKeluar = holder.itemView.findViewById<Button>(R.id.btn_absen_keluar)
+        buttonAbsenKeluar.isEnabled = true
 
         if (currentItem.tanggalKeluar != "-" || currentItem.lokasiKeluar != "-" || currentItem.jamKeluar != "-"){
             buttonAbsenKeluar.isEnabled = false
